@@ -36,7 +36,6 @@
 	</script>
 
 	<script type="text/x-kendo-template" id="device-template">
-		<div>
 		    <ul
 		      data-role="listview"
 		      data-template="deviceitem-template"
@@ -44,8 +43,6 @@
 		      data-bind="source : dataSource, events: {change: onClick}"
 		    >
 		    </ul>
-	  	</div>
-
 	</script>
 
 	<script type="text/x-kendo-template" id="deviceitem-template">
@@ -56,6 +53,60 @@
 		    	<span data-bind="text: address"></span>
 	    	</div>
 	    </li>
+	</script>
+
+	<script type="text/x-kendo-template" id="status-template">
+		<div>
+		<ul  data-role="listview" 
+			data-template="statusitem-template" 
+			data-bind="source : dataSource">
+		</ul>
+		</div>
+
+	</script>
+	<script type="text/x-kendo-template" id="statusitem-template">
+			<li>
+				<div style="padding:15px;margin:5px;">
+					<strong>Occupancy</strong>
+					<strong data-bind="text: occ"></strong>
+			    	</br>
+			    	<strong>Lighting Level</strong>
+			    	<span data-bind="text: lux"></span>
+			    </div>
+
+			    <strong>Lamp</strong>
+			    <input data-role="slider"
+			    		data-min='0' 
+			    		data-max='1'
+			    		data-bind="value : lamp, events: {change: onClick}"
+			    >
+			    </input></br>
+
+				<strong>Mode</strong>
+			    <input data-role="slider"
+			    		data-min='0' 
+			    		data-max='1'
+			    		data-bind="value : mode, events: {change: onClick}"
+			    >
+			    </input></br>
+
+
+			    <strong>Setpoint</strong>
+			    <input data-role="slider"
+			    		data-min='0' 
+			    		data-max='100'
+			    		data-bind="value : setpoint, events: {change: onClick}"
+			    >
+			    </input></br>
+
+			    <strong>Errorband</strong>
+			    <input data-role="slider"
+			    		data-min='0' 
+			    		data-max='10'
+			    		data-bind="value : errorband, events: {change: onClick}"
+			    >
+			    </input></br>
+			</li>
 	</script>
  
 	<script type="text/x-kendo-template" id="layout-template">

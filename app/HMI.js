@@ -27,7 +27,6 @@ var areaModel = kendo.observable({
 
     onSelect: function(e){
       var index = e.item.index();
-      console.log(index);
       var data = this.dataSource.view()[index];
       this.trigger("area:selected", data.area);
     },
@@ -111,15 +110,9 @@ var zoneModel = kendo.observable({
       this.dataSource.filter({ field: "address", operator: "eq", value: e });
     },
 
-    getFirstData: function(){
-
-    },
-
     onSelect: function(e){
       var index = e.item.index();
       var data = this.dataSource.view()[index];
-      console.log(index);
-      console.log(data);
       this.trigger("zone:selected", data.id);
     },
 
@@ -138,9 +131,7 @@ var zoneModel = kendo.observable({
 var statusModel = kendo.observable({
 
     dataSource: new kendo.data.DataSource({
-      /*schema: {
-        model: { id: "id"}
-      }, ??????*/
+      schema: { model: {} },
       transport: {
         read: {
           url: "http://localhost:80/service/zone",
@@ -150,11 +141,11 @@ var statusModel = kendo.observable({
         update:{
           url: "http://localhost:80/service/zone",
           dataType: "JSON",
-          type: "PUT"          
+          type: "POST"          
         }
       },
 
-      filter: { field: "id", operator: "eq", value: "" }
+      filter: { field: "id", operator: "eq", value: "1" }
 
     }),
 
@@ -163,17 +154,8 @@ var statusModel = kendo.observable({
     },
 
     onClick: function(e){
-      var index = e.sender.select().index();
-      var data = this.dataSource.view()[index];
-      
-      this.trigger("status:save", {
-        zone : data.zone,
-        address : data.address,
-        mode : data.mode,
-        setpoint : data.setpoint,
-        errorband : data.erroband,
-        lamp : data.lamp
-      });
+      var data = this.dataSource.view()[0];
+      this.dataSource.sync();
     }
 });
 
@@ -188,7 +170,6 @@ deviceModel.bind("device:clicked", deviceSelect);
 zoneModel.bind("zone:selected", ZoneChange);
 //zoneModel.bind("zone:edit", EditName);
 
-statusModel.bind("status:save", SendCommand);
 
 //==================================CONTROLLER==============================
   //controller for areaModel
@@ -207,17 +188,26 @@ statusModel.bind("status:save", SendCommand);
     });
     appRouter.navigate("/status");
     layout.showIn("#content", statusView);
+    //appendText();
   }
 
   //controller for zoneModel
   function ZoneChange(zone){
-    statusModel.setFilter(zone.id);
+    statusModel.setFilter(zone);
     layout.showIn("#content", statusView);
   }
 
-  //controller for statusModel
-  function SendCommand(){
-
+  function appendText(){
+    statusModel.dataSource.fetch(function(){
+      var data=statusModel.dataSource.view();
+      if(data[0].occ==1){
+       $("#occupancy").text("Occupied");
+      }
+      else{
+        $("#occupancy").text("Unoccupied");
+      }
+       $("#llevel").text(data[0].lux);
+    });
   }
 
 //==================================VIEWS====================================
