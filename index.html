@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My App</title>
+
+    <link href="style/kendo.common.min.css" rel="stylesheet" />
+    <link href="style/kendo.moonlight.min.css" rel="stylesheet" />
+
+</head>
+<body>
+
+	<div id="application"></div>
+
+	<script type="text/x-kendo-template" id="area-template">
+		<div>
+	        <h2>Area</h2>
+	        <input 
+		        data-role="dropdownlist" 
+		        data-text-field="area" 
+		        data-value-field="area"
+		        data-bind="source: dataSource, events: {select: onSelect}" id="areadropdown"/>
+	    </div>
+
+	</script>
+
+	<script type="text/x-kendo-template" id="zone-template">
+		<div>
+	        <h2>Zone</h2>
+	        <input 
+		        data-role="dropdownlist" 
+		        data-text-field="zone" 
+		        data-value-field="id"
+		        data-bind="source: dataSource, events: {select: onSelect}"
+		        />
+	    </div>
+	</script>
+
+	<script type="text/x-kendo-template" id="device-template">
+		<div>
+		    <ul
+		      data-role="listview"
+		      data-template="deviceitem-template"
+		      data-selectable="single"
+		      data-bind="source : dataSource, events: {change: onClick}"
+		    >
+		    </ul>
+	  	</div>
+
+	</script>
+
+	<script type="text/x-kendo-template" id="deviceitem-template">
+	    <li>
+	    	<div style="padding:15px;margin:5px;">
+		    	<strong data-bind="text: location"></strong>
+		    	</br>
+		    	<span data-bind="text: address"></span>
+	    	</div>
+	    </li>
+	</script>
+ 
+	<script type="text/x-kendo-template" id="layout-template">
+	  	<section id="dropdown"></section>
+	  	<section id="content"></section>
+
+	  <div id="footer">
+	  	<span id="copyright"> Copyright by Alkindi </span>
+	  </div>
+	</script>
+
+	<script src="lib/jquery.min.js"></script>
+    <script src="lib/kendo.all.min.js"></script>
+
+    <script src="app/HMI.js"></script>
+</body>
+</html>

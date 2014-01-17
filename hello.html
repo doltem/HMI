@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My App</title>
+
+    <link href="style/kendo.common.min.css" rel="stylesheet" />
+    <link href="style/kendo.moonlight.min.css" rel="stylesheet" />
+    <link href="hello.css" rel="stylesheet" />
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/kendo.all.min.js"></script>
+</head>
+<body>
+    <header><h2>Single page app with Kendo UI</h2></header>
+    <div id="section">
+        <nav>
+            <ul>
+                <li><a id="showHome" href="#">Home</a></li>
+                <li><a id="showCars" href="#">My Cars</a></li>
+                <li><a id="showAboutme" href="#">About me</a></li>
+            </ul>
+        </nav>
+
+        <div id="application">
+        </div>
+    </div>
+
+    <script type="text/kendo-tmpl" id="home">
+        <div>Welcome to my Single-Page Application with Kendo UI
+        </div>
+    </script>
+    
+    <script type="text/kendo-tmpl" id="myCars">
+        <div>
+            <img id="carPicture" data-bind="attr: { src: pictureUrl}" />
+            <div id="Name" data-bind="text: name"></div>
+            <div id="Name" data-bind="text: model"></div>
+            <div id="Name" data-bind="text: cost"></div>
+        </div>
+    </script>
+    <script type="text/kendo-tmpl" id="aboutMe">
+        <div >Hi guys Im Simeon Nenov :))
+        </br>You can visit my blog at 
+        <a href="http://ssnenov.wordpress.com">http://ssnenov.wordpress.com</a>
+        </div>
+    </script>
+    <script src="hello.js"></script>
+</body>
+
+</html>
