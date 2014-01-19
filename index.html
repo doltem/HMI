@@ -3,124 +3,156 @@
 <head>
     <title>My App</title>
 
+    <link href="style/kendo.mobile.all.min.css" rel="stylesheet" />
     <link href="style/kendo.common.min.css" rel="stylesheet" />
-    <link href="style/kendo.moonlight.min.css" rel="stylesheet" />
+    <link href="style/kendo.default.min.css" rel="stylesheet" />
+
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/kendo.all.min.js"></script>
+    <script src="app/HMI.js"></script>
 
 </head>
 <body>
+    <div data-role="layout" data-id="default">
+        <header data-role="header">
+        <div data-role="navbar">
+            <span data-role="view-title"></span>
+        </div>
+        </header>
 
-	<div id="application"></div>
-
-	<script type="text/x-kendo-template" id="area-template">
-		<div>
-	        <h2>Area</h2>
-	        <input 
-		        data-role="dropdownlist" 
-		        data-text-field="area" 
-		        data-value-field="area"
-		        data-bind="source: dataSource, events: {select: onSelect}" id="areadropdown"/>
-	    </div>
-
-	</script>
-
-	<script type="text/x-kendo-template" id="zone-template">
-		<div>
-	        <h2>Zone</h2>
-	        <input 
-		        data-role="dropdownlist" 
-		        data-text-field="zone" 
-		        data-value-field="id"
-		        data-bind="source: dataSource, events: {select: onSelect}"
-		        />
-	    </div>
-	</script>
-
-	<script type="text/x-kendo-template" id="device-template">
-		    <ul
-		      data-role="listview"
-		      data-template="deviceitem-template"
-		      data-selectable="single"
-		      data-bind="source : dataSource, events: {change: onClick}"
-		    >
-		    </ul>
-	</script>
-
-	<script type="text/x-kendo-template" id="deviceitem-template">
-	    <li>
-	    	<div style="padding:15px;margin:5px;">
-		    	<strong data-bind="text: location"></strong>
-		    	</br>
-		    	<span data-bind="text: address"></span>
-	    	</div>
-	    </li>
-	</script>
-
-	<script type="text/x-kendo-template" id="status-template">
-		<div>
-		<ul  data-role="listview" 
-			data-template="statusitem-template" 
-			data-bind="source : dataSource">
-		</ul>
-		</div>
-
-	</script>
-	<script type="text/x-kendo-template" id="statusitem-template">
-			<li>
-				<div style="padding:15px;margin:5px;">
-					<strong>Occupancy</strong>
-					<strong data-bind="text: occ"></strong>
-			    	</br>
-			    	<strong>Lighting Level</strong>
-			    	<span data-bind="text: lux"></span>
-			    </div>
-
-			    <strong>Lamp</strong>
-			    <input data-role="slider"
-			    		data-min='0' 
-			    		data-max='1'
-			    		data-bind="value : lamp, events: {change: onClick}"
-			    >
-			    </input></br>
-
-				<strong>Mode</strong>
-			    <input data-role="slider"
-			    		data-min='0' 
-			    		data-max='1'
-			    		data-bind="value : mode, events: {change: onClick}"
-			    >
-			    </input></br>
+        <footer data-role="footer" data-id="default">
+        <div data-role="tabstrip">
+            <a href="#home" data-icon="home">Home</a>
+            <a href="#event" data-icon="organize">Events</a>
+            <a href="#about" data-icon="cart">About</a>
+        </div>
+        </footer>
+    </div>
 
 
-			    <strong>Setpoint</strong>
-			    <input data-role="slider"
-			    		data-min='0' 
-			    		data-max='100'
-			    		data-bind="value : setpoint, events: {change: onClick}"
-			    >
-			    </input></br>
 
-			    <strong>Errorband</strong>
-			    <input data-role="slider"
-			    		data-min='0' 
-			    		data-max='10'
-			    		data-bind="value : errorband, events: {change: onClick}"
-			    >
-			    </input></br>
-			</li>
-	</script>
- 
-	<script type="text/x-kendo-template" id="layout-template">
-	  	<section id="dropdown"></section>
-	  	<section id="content"></section>
 
-	  <div id="footer">
-	  	<span id="copyright"> Copyright by Alkindi </span>
-	  </div>
-	</script>
+    <div data-url="/" data-title="Device List" data-role="view" id="home" data-layout="default" data-model="areaModel" data-init="viewInit">
+        <Strong data-bind="text: area"></Strong>
+        <a data-role="button" data-rel="modalview" href="#modalview-area" id="modalview-open-button">Select Area</a>    
+        
+        <div data-role="modalview" id="modalview-area" style="width: 90%;height :50%;">
+            <div data-role="header">
+                <div data-role="navbar">
+                    <span>Select Area</span>
+                    <a data-click="closeModalArea" data-role="button" data-align="right">Cancel</a>
+                </div>
+            </div>
 
-	<script src="lib/jquery.min.js"></script>
-    <script src="lib/kendo.all.min.js"></script>
+            <ul
+                id="arealist"
+                class="item-list"
+                data-type="flat"
+                data-role="listview"
+                data-template="areaitem-template"
+                data-bind="source: areaSource, events: {click: onSelect}"
+            ></ul>
 
-    <script src="app/HMI.js"></script>
+        </div>
+
+        <ul
+            id="devicelist"
+            class="item-list"
+            data-type="flat"
+            data-role="listview"
+            data-template="deviceitem-template"
+            data-bind="source: deviceSource"
+        ></ul>
+    </div>
+
+    <div data-title="Device Status" data-role="view" id="status" data-layout="default" data-after-show="setFilter" data-model="zoneModel">
+
+        <header data-role="header">
+            <div data-role="navbar">
+                <a data-role="backbutton" data-align="left">Back</a>
+                <span data-role="view-title"></span>
+            </div>
+        </header>
+
+        <Strong data-bind="text: zone"></Strong>
+        <a data-role="button" data-rel="modalview" href="#modalview-zone" id="modalview-open-button">Select Zone</a>    
+        
+        <div data-role="modalview" id="modalview-zone" style="width: 90%;height :50%;">
+            <div data-role="header">
+                <div data-role="navbar">
+                    <span>Select Zone</span>
+                    <a data-click="closeModalZone" data-role="button" data-align="right">Cancel</a>
+                </div>
+            </div>
+
+            <ul
+                id="zonelist"
+                data-type="flat"
+                data-role="listview"
+                data-template="zoneitem-template"
+                data-bind="source: zoneSource, events: {click: onSelect}"
+            ></ul>
+
+        </div>
+
+        <ul data-role="listview" data-style="inset" data-type="group">
+            <li>
+                Status
+                <ul>
+                    <li >
+                        Occupancy <span data-bind="text: occ">
+                    </li>
+                    <li>
+                        Lighting Level <span data-bind="text: lux">
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Setting
+                <ul>
+                    <li>Lamp 
+                        <input type="checkbox" data-role="switch" data-bind="checked: lamp, events: { change: onChange }">
+                    </li>
+                    <li>Mode 
+                        <input type="checkbox" data-role="switch" data-bind="checked: mode, events: { change: onChange }">
+                    </li>
+                    <li>Set Point <input 
+                        data-role="slider" type="range" max="100" 
+                        data-bind="value : setpoint, events: { change: onChange }"/></li>
+                    <li>Errorband </br><input 
+                        data-role="slider" 
+                        type="range" max="10" 
+                        data-bind="value : errorband,events: { change: onChange }"/>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+
+    <script type="text/x-kendo-template" id="deviceitem-template">
+            <a
+            class="details-link"
+            data-role="listview-link"
+            href="\#status?address=#:address#">
+                <strong data-bind="text: location"></strong>
+                </br>
+                <span data-bind="text: address"></span>
+            </a>
+    </script>
+
+    <script type="text/x-kendo-template" id="areaitem-template">
+        <a data-bind="text: area"></a>
+    </script>
+
+    <script type="text/x-kendo-template" id="zoneitem-template">
+        <a data-bind="text: zone"></a>
+    </script>
+
+    <script>
+        app = new kendo.mobile.Application($(document.body), { transition: "slide",
+            platform: "blackberry",
+         });
+    </script>
 </body>
 </html>
