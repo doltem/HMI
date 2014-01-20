@@ -87,6 +87,7 @@
 
             <ul
                 id="zonelist"
+                class="item-list"      
                 data-type="flat"
                 data-role="listview"
                 data-template="zoneitem-template"
@@ -128,6 +129,21 @@
             </li>
         </ul>
     </div>
+
+    <div data-title="Events" data-role="view" id="event" data-layout="default" data-model="eventModel">
+        <ul
+            id="eventlist"
+            data-type="flat"
+            data-role="listview"
+            data-template="eventitem-template"
+            data-bind="source: eventSource"
+        ></ul>
+    </div>
+
+    <script type="text/x-kendo-template" id="eventitem-template">
+        <strong data-bind="text: timestamp"></strong> </br>
+        <strong data-bind="text: status"></strong>
+    </script>
 
 
     <script type="text/x-kendo-template" id="deviceitem-template">

@@ -24,11 +24,11 @@ var areaModel = kendo.observable({
       },
 
       requestStart: function (e){
-        console.log("areaSource request START");
+        //console.log("areaSource request START");
       },
 
       requestEnd: function (e){
-        console.log("areaSource request END");
+        //console.log("areaSource request END");
       }
 
     }),
@@ -48,11 +48,11 @@ var areaModel = kendo.observable({
       },
 
       requestStart: function (e){
-        console.log("deviceSource request START");
+        //console.log("deviceSource request START");
       },
 
       requestEnd: function (e){
-        console.log("deviceSource request END");
+        //console.log("deviceSource request END");
       }
 
     }),
@@ -67,15 +67,18 @@ var areaModel = kendo.observable({
       var index = e.item.index();
       var data = this.areaSource.view()[index];
       this.deviceSource.filter({ field: "area", operator: "eq", value: data.area });
-      console.log("masuk di onSelect")
+      //console.log("masuk di onSelect")
       $("#modalview-area").data("kendoMobileModalView").close();
-    },
+    }
 
 });
 
 
 //Model for Zone Dropdown List
 var zoneModel = kendo.observable({
+    id:"",
+    address:"",
+    alias:"",
     zone:"",
     occ: 1,
     lux:800,
@@ -83,6 +86,7 @@ var zoneModel = kendo.observable({
     mode:false,
     setpoint: 900,
     errorband:50,
+    index:0,
 
     zoneSource: new kendo.data.DataSource({
       transport: {
@@ -99,17 +103,15 @@ var zoneModel = kendo.observable({
       },
 
       requestStart: function (e){
-        console.log("zoneSource request START");
+        //console.log("zoneSource request START");
       },
 
       requestEnd: function (e){
         setTimeout(function(){
-        
-          var data = zoneModel.zoneSource.at(0);
+          var data = zoneModel.zoneSource.at(zoneModel.index);
           zoneModel.setStatusFilter(data);
-          console.log(data);
-          console.log("zoneSource request END");
-        }, 2000);
+          
+        }, 200);
       },
 
 
@@ -127,11 +129,11 @@ var zoneModel = kendo.observable({
       },
 
       requestStart: function (e){
-        console.log("commandSource request START");
+        //console.log("commandSource request START");
       },
 
       requestEnd: function (e){
-        console.log("commandSource request END");
+        //console.log("commandSource request END");
       },
 
       filter: { field: "id", operator: "eq", value: "1" }
@@ -144,19 +146,24 @@ var zoneModel = kendo.observable({
     },
 
     setStatusFilter: function(data){
-      this.set("occ",data.zone);
+      this.set("zone",data.zone);
       this.set("occ",data.occ);
       this.set("lux",data.lux);
       this.set("lamp",(data.lamp==0)?false:true);
       this.set("mode",(data.mode==0)?false:true);
       this.set("setpoint",data.setpoint);
       this.set("errorband",data.errorband);
-      console.log("data [ occ, lux, lamp, mode, setpoint,errorband] : ["+this.occ+", "+this.lux+", "+this.lamp+", "+this.mode+", "+this.setpoint+", "+this.errorband+"]");
+      this.set("address",data.address);
+      this.set("alias",data.alias);
+      this.set("id",data.id);
+      //console.log("data [ occ, lux, lamp, mode, setpoint,errorband] : ["+this.occ+", "+this.lux+", "+this.lamp+", "+this.mode+", "+this.setpoint+", "+this.errorband+"]");
     },
 
     onSelect: function(e){
-      var index = e.item.index();
-      var data = this.zoneSource.view()[index];
+      var data = this.zoneSource.view()[e.item.index()];
+      console.log(data);
+      zoneModel.index=zoneModel.zoneSource.indexOf(data);
+      //console.log("index "+zoneModel.index);
       this.setStatusFilter(data);
       $("#modalview-zone").data("kendoMobileModalView").close();
     },
@@ -172,7 +179,7 @@ var zoneModel = kendo.observable({
         errorband : this.errorband
       };
       this.commandSource.add(command);
-      console.log(this.commandSource.at(0));
+      //console.log(this.commandSource.at(0));
       this.commandSource.sync();
       this.commandSource.remove(this.commandSource.at(0));
     },
@@ -187,6 +194,31 @@ var zoneModel = kendo.observable({
     }
   });
 
+var eventModel = kendo.observable({
+
+    eventSource: new kendo.data.DataSource({
+      /*schema: {
+        model: { id: "id"}
+      }, ??????*/
+      transport: {
+        read: {
+          url: "http://localhost:80/service/event",
+          dataType: "JSON",
+          type: "GET"
+        }        
+      },
+
+      requestStart: function (e){
+        console.log("eventSource request START");
+      },
+
+      requestEnd: function (e){
+        console.log("eventSource request END");
+      }
+
+    })
+});
+
 //=================================MODEL-BINDER===========================
 
 
@@ -195,27 +227,28 @@ var zoneModel = kendo.observable({
   function setFilter(e){
     zoneModel.setZoneFilter(e.view.params.address);
     //zoneModel.zoneSource.fetch(function(){
-    zoneModel.zoneSource.read();
+    zoneModel.zoneSource.fetch(function(){
       var data = zoneModel.zoneSource.view();
+      zoneModel.index=zoneModel.zoneSource.indexOf(data[0]);
       zoneModel.setStatusFilter(data[0]);
+    });
     //})
   }
 
   function viewInit(){
-    areaModel.areaSource.read()
-      setTimeout(function(){
+    areaModel.areaSource.fetch(function(){
         var data = areaModel.areaSource.at(0);
-        console.log(data);
+        //console.log(data);
         areaModel.init(data.area);
-      }, 200);
+    });
   }
 
   function closeModalArea(){
-    $("#modalview-area").kendoMobileModalView("close")
+    $("#modalview-area").kendoMobileModalView("close");
   }
 
   function closeModalZone(){
-    $("#modalview-zone").kendoMobileModalView("close")
+    $("#modalview-zone").kendoMobileModalView("close");
   }
 
   //controller for zoneModel
@@ -230,41 +263,12 @@ var zoneModel = kendo.observable({
       zoneModel.zoneSource.read();
 
       pollZone();
-  }, 1000);
+  }, 4000);
 })();
 
 (function pollArea(){
    setTimeout(function(){
-      areaModel.deviceSource.read()
+      areaModel.deviceSource.read();
       pollArea();
-  }, 1000);
+  }, 4000);
 })();
-
-//==================================VIEWS====================================
-
-//==================================CONTROLLERS====================================
-
-//==================================ROUTER================================
-var appRouter = new kendo.Router({
-  init: function(){
-    layout.render($("#application"));
-    console.log("route initiated");
-  }
-});
-
-appRouter.route("/home",function(){
-  layout.showIn("#dropdown", areaView);
-  layout.showIn("#content", deviceView);
-  console.log("navigated to /home");
-});
-
-appRouter.route("/status",function(){
-
-});
-
-//==================================ONLOAD FUNCTIONS====================================
-/*$(function () {
-    appRouter.start();
-    appRouter.navigate("/home");
-    console.log("apps loaded");
-});*/
