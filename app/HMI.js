@@ -87,6 +87,8 @@ var zoneModel = kendo.observable({
     setpoint: 900,
     errorband:50,
     index:0,
+    
+    onCommand:0,
 
     zoneSource: new kendo.data.DataSource({
       transport: {
@@ -120,6 +122,7 @@ var zoneModel = kendo.observable({
     }),
 
     commandSource: new kendo.data.DataSource({
+      schema: { model: {} },
       transport: {
         create:{
           url: "http://localhost:80/service/zone",
@@ -129,11 +132,14 @@ var zoneModel = kendo.observable({
       },
 
       requestStart: function (e){
-        //console.log("commandSource request START");
+        console.log("commandSource request START");
       },
 
       requestEnd: function (e){
-        //console.log("commandSource request END");
+        setTimeout(function(){
+            zoneModel.onCommand=0;
+            console.log("commandSource request END");
+        }, 5000);
       },
 
       filter: { field: "id", operator: "eq", value: "1" }
@@ -169,6 +175,8 @@ var zoneModel = kendo.observable({
     },
 
     onChange: function(){
+      zoneModel.onCommand=1;
+      console.log("onChange")
       var data = this.zoneSource.view()[0];
       var command={
         zone: data.zone,
@@ -179,9 +187,10 @@ var zoneModel = kendo.observable({
         errorband : this.errorband
       };
       this.commandSource.add(command);
-      //console.log(this.commandSource.at(0));
+      console.log(this.commandSource.at(0));
       this.commandSource.sync();
       this.commandSource.remove(this.commandSource.at(0));
+      
     },
 
     onEdit: function(data){
@@ -251,24 +260,20 @@ var eventModel = kendo.observable({
     $("#modalview-zone").kendoMobileModalView("close");
   }
 
-  //controller for zoneModel
-  function ZoneChange(zone){
-    statusModel.setFilter(zone);
-    layout.showIn("#content", statusView);
-  }
-
 
 (function pollZone(){
    setTimeout(function(){
-      zoneModel.zoneSource.read();
-
-      pollZone();
-  }, 4000);
+      console.log("onCommand"+zoneModel.onCommand);
+      if(zoneModel.onCommand==0){
+        zoneModel.zoneSource.read(); 
+     }
+     pollZone();
+  }, 3000);
 })();
 
 (function pollArea(){
    setTimeout(function(){
       areaModel.deviceSource.read();
       pollArea();
-  }, 4000);
+  }, 10000);
 })();
