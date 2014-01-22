@@ -66,6 +66,7 @@ var areaModel = kendo.observable({
     onSelect: function(e){
       var index = e.item.index();
       var data = this.areaSource.view()[index];
+      this.set("area",data.area);
       this.deviceSource.filter({ field: "area", operator: "eq", value: data.area });
       //console.log("masuk di onSelect")
       $("#modalview-area").data("kendoMobileModalView").close();

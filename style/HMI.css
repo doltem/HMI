@@ -43,12 +43,13 @@ and open the template in the editor.
 #mainnavbar, #statusnavbar ,#areamodalnavbar,#zonemodalnavbar {
     background-color: #4c5356;
     border-bottom-style:solid;
-    border-bottom-color:#0ff;
+    border-bottom-color:#10c4b2;
     border-bottom-width:0.15em;
 }
 
 #maintitle, #statustitle, #backbutton, #zonecancelbutton,#areacancelbutton{
     color:#FFF;
+    font-style: normal;
 }
 
 .eventstatus{
@@ -87,22 +88,40 @@ and open the template in the editor.
 }
 
 #startuplogo{
-    font-size:4em;
-    font-family: HelveticaNeue, Roboto, 'Myriad Pro', 'Nokia Pure', Arial, sans-serif;
-    font-weight: bold;
+    font-size:4.5em;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+    color:#4c5356;
+    text-align: center;
+    height:1.2em;
+}
+
+#startuplogoborder{
+    width : 12em;
+    height: 0px;
+    border-bottom-style:solid;
+    border-bottom-color:#10c4b2;
+    border-bottom-width:0.15em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#startuplogo2{
+    font-size:1.034em;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
     color:#4c5356;
     text-align: center;
 }
 
 #enterbuttonsection{
     text-align: center;
-    margin-top: 1em;
+    margin-top: 2.4em;
 }
 
 #enterbutton{
     background-color: #4c5356;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color:white;
-    width:11.8em;
+    width:12em;
 }
 
 #startup .km-content{
@@ -113,7 +132,7 @@ div .km-scroll-container{
     height:568px;
 }
 #startupcontent{
-    padding: 60% 0;
+    padding: 55% 0;
     width:100%;
 }
 
