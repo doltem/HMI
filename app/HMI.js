@@ -153,7 +153,7 @@ var zoneModel = kendo.observable({
 
     setStatusFilter: function(data){
       this.set("zone",data.zone);
-      this.set("occ",data.occ);
+      this.set("occ",(data.occ==0)?"UNOCCUPIED":"OCCUPIED");
       this.set("lux",data.lux);
       this.set("lamp",(data.lamp==0)?false:true);
       this.set("mode",(data.mode==0)?false:true);
