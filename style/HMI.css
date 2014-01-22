@@ -118,11 +118,11 @@ and open the template in the editor.
 }
 
 #enterbutton{
-    background-color: #4c5356;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color:white;
     width:12em;
 }
+
 
 #startup .km-content{
 }
