@@ -32,7 +32,8 @@
         <header></header>
         <footer></footer>
     </div>
-
+    
+    <!--/////////////////////////////////STARTUP SCREEN VIEW//////////////////////////--> 
     <div data-url="/" data-role="view" id="startup" data-layout="startupscreen">
         <section id="startupcontent">
             <section id="startuplogo"><span style="color : #10c4b2;font-weight: bold;">L</span>-Con</section>
@@ -43,15 +44,15 @@
         
     </div>
 
-
-    <div data-title="Device List" data-role="view" id="home" data-layout="default" data-model="areaModel" data-init="viewInit">
+<!-- ////////////////////////////////DEVICE LIST VIEW/////////////////////////////// -->
+    <div data-title="Device List" data-role="view" id="home" data-layout="default" data-model="areaModel" data-init="viewInit" data-show="deviceViewActive">
         <ul data-role="listview" data-style="inset">
             <li id="areaselect-list">
                 <span data-bind="text: area" id="areaname" class="currentoption"></span>
                 <a data-role="button" data-rel="modalview" href="#modalview-area" id="modalarea-open-button" class="optionbutton">Select Area</a>
             </li>
         </ul>
-        
+        <!-- ////////////////////select area MODAL//////////////////////////////////-->       
         <div data-role="modalview" id="modalview-area" style="width: 80%;height :30%;">
             <div data-role="header">
                 <div data-role="navbar" id="areamodalnavbar">
@@ -59,7 +60,7 @@
                     <a data-click="closeModalArea" data-role="button" data-align="right" id="areacancelbutton">Cancel</a>
                 </div>
             </div>
-
+            <!-- ////////////////////////////area list/////////////////////////////////-->      
             <ul
                 id="arealist"
                 class="item-list"
@@ -70,7 +71,7 @@
             ></ul>
 
         </div>
-
+        <!-- ////////////////////////////device list//////////////////////////////// -->  
         <ul
             id="devicelist"
             class="item-list"
@@ -81,16 +82,9 @@
             data-bind="source: deviceSource"
         ></ul>
     </div>
-    
-    <div data-role="view" id="startup" data-layout="default">
-        <section id="startupcontent">
-            <section id="startuplogo">L-Con</section>
-            <section id="startuplogin"></section>
-        </section>
-        
-    </div>
 
-    <div data-title="Device Status" data-role="view" id="status" data-layout="default" data-init="setFilter" data-model="zoneModel">
+    <!-- ///////////////////////device status VIEW//////////////////// --> 
+    <div data-title="Device Status" data-role="view" id="status" data-layout="default" data-init="setFilter" data-model="zoneModel" data-show="statusViewActive">
 
         <header data-role="header">
             <div data-role="navbar" id="statusnavbar" >
@@ -106,6 +100,7 @@
             </li>
         </ul>
         
+        <!-- //////////////////////////////zone select MODAL///////////////// --> 
         <div data-role="modalview" id="modalview-zone" style="width: 80%;height :30%;">
             <div data-role="header">
                 <div data-role="navbar" id="zonemodalnavbar">
@@ -113,7 +108,7 @@
                     <a data-click="closeModalZone" data-role="button" data-align="right" id="zonecancelbutton">Cancel</a>
                 </div>
             </div>
-
+            <!-- ///////////////////////////zone list////////////////////////////--> 
             <ul
                 id="zonelist"
                 class="item-list"      
@@ -124,7 +119,8 @@
             ></ul>
 
         </div>
-
+        
+        <!-- ////////////////////device status form///////////////////////////--> 
         <ul data-role="listview" data-style="inset" data-type="group">
             <li class="listheading">
                 Status
@@ -165,7 +161,8 @@
             </li>
         </ul>
     </div>
-
+    
+    <!-- //////////////////////EVENT VIEW////////////////////////////////////////// --> 
     <div data-title="Events" data-role="view" id="event" data-layout="default" data-model="eventModel">
         <ul
             id="eventlist"
@@ -176,6 +173,7 @@
         ></ul>
     </div>
     
+    <!-- ////////////////////ABOUT VIEW///////////////////////////--> 
     <div data-title="About" data-role="view" id="about" data-layout="default" >
         <div class="aboutblock">
             <div class="aboutdetails">
@@ -188,6 +186,7 @@
         </div>
     </div>
 
+    <!-- ////////////////////EVENT LIST TEMPLATE///////////////////////////--> 
     <script type="text/x-kendo-template" id="eventitem-template">
         <strong class="eventstatus" data-bind="text: status"></strong><strong class="eventtimestamp" data-bind="text: timestamp"></strong>
         <div class="eventdetail">
@@ -197,7 +196,7 @@
         </div>
     </script>
 
-
+    <!-- ////////////////////DEVICE LIST TEMPLATE///////////////////////////--> 
     <script type="text/x-kendo-template" id="deviceitem-template">
             <a
             class="details-link"
@@ -209,14 +208,17 @@
             </a>
     </script>
 
+    <!-- ////////////////////AREA LIST TEMPLATE///////////////////////////--> 
     <script type="text/x-kendo-template" id="areaitem-template">
         <a data-bind="text: area"></a>
     </script>
 
+    <!-- ////////////////////ZONE LIST TEMPLATE///////////////////////////--> 
     <script type="text/x-kendo-template" id="zoneitem-template">
         <a data-bind="text: alias"></a>
     </script>
     
+    <!-- ////////////////////SCRIPT LOAD///////////////////////////--> 
     <script src="lib/jquery.min.js"></script>
     <script src="lib/kendo.all.min.js"></script>
     <script src="app/HMI.js"></script>

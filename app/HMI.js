@@ -1,5 +1,5 @@
 //==================================VARIABLES====================================
-
+var host="http://localhost";
 //==================================MODELS===================================
 //Model for Area Dropdown List
 var areaModel = kendo.observable({
@@ -7,24 +7,24 @@ var areaModel = kendo.observable({
     areaSource: new kendo.data.DataSource({
       transport: {
         read: {
-          url: "http://192.168.1.153/service/area",
+          url: host+"/service/area",
           dataType: "json",
           type: "GET"
         },
         create: {
-          url: "http://192.168.1.153/service/area",
+          url: host+"/service/area",
           dataType: "json",
           type: "POST"
         },
         update:{
-          url: "http://192.168.1.153/service/area",
+          url: host+"/service/area",
           dataType: "json",
           type: "PUT"          
         }
       },
 
       requestStart: function (e){
-        //console.log("areaSource request START");
+        console.log("areaSource request START");
       },
 
       requestEnd: function (e){
@@ -36,19 +36,19 @@ var areaModel = kendo.observable({
     deviceSource: new kendo.data.DataSource({
       transport: {
         read: {
-          url: "http://192.168.1.153/service/location",
+          url: host+"/service/location",
           dataType: "json",
           type: "GET"
         },
         update:{
-          url: "http://192.168.1.153/service/location",
+          url: host+"/service/location",
           dataType: "json",
           type: "PUT"          
         }
       },
 
       requestStart: function (e){
-        //console.log("deviceSource request START");
+        console.log("deviceSource request START");
       },
 
       requestEnd: function (e){
@@ -90,31 +90,28 @@ var zoneModel = kendo.observable({
     index:0,
     
     onCommand:0,
+    viewactive:0,
 
     zoneSource: new kendo.data.DataSource({
       transport: {
         read: {
-          url: "http://192.168.1.153/service/zone",
+          url: host+"/service/zone",
           dataType: "JSON",
           type: "GET"
         },
         update:{
-          url: "http://192.168.1.153/service/zone",
+          url: host+"/service/zone",
           dataType: "JSON",
           type: "PUT"          
         }
       },
 
       requestStart: function (e){
-        //console.log("zoneSource request START");
+        console.log("zoneSource request START");
       },
 
       requestEnd: function (e){
-        setTimeout(function(){
-          var data = zoneModel.zoneSource.at(zoneModel.index);
-          zoneModel.setStatusFilter(data);
-          
-        }, 200);
+        
       },
 
 
@@ -122,25 +119,30 @@ var zoneModel = kendo.observable({
 
     }),
 
-    commandSource: new kendo.data.DataSource({
+    statusSource: new kendo.data.DataSource({
       schema: { model: {} },
       transport: {
+        read: {
+          url: host+"/service/zone",
+          dataType: "JSON",
+          type: "GET"
+        },
         create:{
-          url: "http://192.168.1.153/service/zone",
+          url: host+"/service/zone",
           dataType: "JSON",
           type: "POST"          
         }
       },
 
       requestStart: function (e){
-        console.log("commandSource request START");
+        console.log("statusSource request START");
       },
 
       requestEnd: function (e){
         setTimeout(function(){
-            zoneModel.onCommand=0;
-            console.log("commandSource request END");
-        }, 5000);
+          var data = zoneModel.zoneSource.at(zoneModel.index);
+          zoneModel.setStatusFilter(data);         
+        }, 200);
       },
 
       filter: { field: "id", operator: "eq", value: "1" }
@@ -181,16 +183,17 @@ var zoneModel = kendo.observable({
       var data = this.zoneSource.view()[0];
       var command={
         zone: data.zone,
-        address:data.address, 
+        address:data.address,
         lamp : (this.lamp==true)?1:0, 
         mode : (this.mode==true)?1:0, 
         setpoint : this.setpoint,
         errorband : this.errorband
       };
-      this.commandSource.add(command);
-      console.log(this.commandSource.at(0));
-      this.commandSource.sync();
-      this.commandSource.remove(this.commandSource.at(0));
+      this.statusSource.add(command);
+      console.log(this.statusSource.at(0));
+      this.statusSource.sync();
+      this.statusSource.remove(this.statusSource.at(0));
+      zoneModel.onCommand=0;
       
     },
 
@@ -212,7 +215,7 @@ var eventModel = kendo.observable({
       }, ??????*/
       transport: {
         read: {
-          url: "http://192.168.1.133/service/event",
+          url: host+"/service/event",
           dataType: "JSON",
           type: "GET"
         }        
@@ -233,8 +236,9 @@ var eventModel = kendo.observable({
 
 
 //==================================CONTROLLER==============================
-  //controller for areaModel
+  //controller for statusview
   function setFilter(e){
+    zoneModel.viewactive=1;
     zoneModel.setZoneFilter(e.view.params.address);
     //zoneModel.zoneSource.fetch(function(){
     zoneModel.zoneSource.fetch(function(){
@@ -244,13 +248,22 @@ var eventModel = kendo.observable({
     });
     //})
   }
-
+  
+  function statusViewActive(){
+      zoneModel.viewactive=1;  
+  }
+  
+///controller for device view
   function viewInit(){
     areaModel.areaSource.fetch(function(){
         var data = areaModel.areaSource.at(0);
         //console.log(data);
         areaModel.init(data.area);
     });
+  }
+  
+  function deviceViewActive(){
+      zoneModel.viewactive=0;  
   }
 
   function closeModalArea(){
@@ -262,19 +275,23 @@ var eventModel = kendo.observable({
   }
 
 
-(function pollZone(){
+(function pollStatus(){
    setTimeout(function(){
       console.log("onCommand"+zoneModel.onCommand);
-      if(zoneModel.onCommand==0){
-        zoneModel.zoneSource.read(); 
+      if(zoneModel.onCommand==0&&zoneModel.viewactive==1){
+        zoneModel.statusSource.read(); 
      }
-     pollZone();
+     pollStatus();
   }, 3000);
 })();
 
 (function pollArea(){
    setTimeout(function(){
-      areaModel.deviceSource.read();
+      if(zoneModel.viewactive==0){
+        areaModel.areaSource.read();  
+        areaModel.deviceSource.read();
+        zoneModel.zoneSource.read();
+     }
       pollArea();
-  }, 10000);
+  }, 60000);
 })();
