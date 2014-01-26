@@ -126,11 +126,6 @@ var zoneModel = kendo.observable({
           url: host+"/service/zone",
           dataType: "JSON",
           type: "GET"
-        },
-        create:{
-          url: host+"/service/zone",
-          dataType: "JSON",
-          type: "POST"          
         }
       },
 
@@ -140,12 +135,31 @@ var zoneModel = kendo.observable({
 
       requestEnd: function (e){
         setTimeout(function(){
-          var data = zoneModel.zoneSource.at(zoneModel.index);
+          var data = zoneModel.statusSource.at(zoneModel.index);
           zoneModel.setStatusFilter(data);         
         }, 200);
+        
+        console.log("statusSource request END");
       },
 
-      filter: { field: "id", operator: "eq", value: "1" }
+    }),
+    
+    commandSource: new kendo.data.DataSource({
+      schema: { model: {} },
+      transport: {
+        create:{
+          url: host+"/service/zone",
+          dataType: "JSON",
+          type: "POST"          
+        }
+      },
+
+      requestStart: function (e){
+        console.log("zommandSource request START");
+      },
+
+      requestEnd: function (e){
+      },
 
     }),
 
@@ -180,20 +194,21 @@ var zoneModel = kendo.observable({
     onChange: function(){
       zoneModel.onCommand=1;
       console.log("onChange")
-      var data = this.zoneSource.view()[0];
       var command={
-        zone: data.zone,
-        address:data.address,
+        zone: this.zone,
+        address:this.address,
         lamp : (this.lamp==true)?1:0, 
         mode : (this.mode==true)?1:0, 
         setpoint : this.setpoint,
-        errorband : this.errorband
+        errorband : this.errorband,
       };
-      this.statusSource.add(command);
-      console.log(this.statusSource.at(0));
-      this.statusSource.sync();
-      this.statusSource.remove(this.statusSource.at(0));
-      zoneModel.onCommand=0;
+      this.commandSource.add(command);
+      console.log(this.commandSource.at(0));
+      this.commandSource.sync();
+      this.commandSource.remove(this.commandSource.at(0));
+      setTimeout(function(){
+        zoneModel.onCommand=0;
+      }, 2000);
       
     },
 
