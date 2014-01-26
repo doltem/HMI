@@ -10,10 +10,6 @@
     <link href="style/kendo.default.min.css" rel="stylesheet" />
     <link href="style/HMI.css" rel="stylesheet" />
 
-    <script src="lib/jquery.min.js"></script>
-    <script src="lib/kendo.all.min.js"></script>
-    <script src="app/HMI.js"></script>
-
 </head>
 <body>
     <div data-role="layout" data-id="default">
@@ -94,7 +90,7 @@
         
     </div>
 
-    <div data-title="Device Status" data-role="view" id="status" data-layout="default" data-after-show="setFilter" data-model="zoneModel">
+    <div data-title="Device Status" data-role="view" id="status" data-layout="default" data-init="setFilter" data-model="zoneModel">
 
         <header data-role="header">
             <div data-role="navbar" id="statusnavbar" >
@@ -220,10 +216,15 @@
     <script type="text/x-kendo-template" id="zoneitem-template">
         <a data-bind="text: alias"></a>
     </script>
+    
+    <script src="lib/jquery.min.js"></script>
+    <script src="lib/kendo.all.min.js"></script>
+    <script src="app/HMI.js"></script>
 
     <script>
         app = new kendo.mobile.Application($(document.body), { transition: "slide",
             skin: "flat",
+            loading:false
          });
     </script>
 </body>

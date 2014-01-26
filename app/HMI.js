@@ -7,17 +7,17 @@ var areaModel = kendo.observable({
     areaSource: new kendo.data.DataSource({
       transport: {
         read: {
-          url: "http://localhost:80/service/area",
+          url: "http://192.168.1.153/service/area",
           dataType: "json",
           type: "GET"
         },
         create: {
-          url: "http://localhost:80/service/area",
+          url: "http://192.168.1.153/service/area",
           dataType: "json",
           type: "POST"
         },
         update:{
-          url: "http://localhost:80/service/area",
+          url: "http://192.168.1.153/service/area",
           dataType: "json",
           type: "PUT"          
         }
@@ -36,12 +36,12 @@ var areaModel = kendo.observable({
     deviceSource: new kendo.data.DataSource({
       transport: {
         read: {
-          url: "http://localhost:80/service/location",
+          url: "http://192.168.1.153/service/location",
           dataType: "json",
           type: "GET"
         },
         update:{
-          url: "http://localhost:80/service/location",
+          url: "http://192.168.1.153/service/location",
           dataType: "json",
           type: "PUT"          
         }
@@ -94,12 +94,12 @@ var zoneModel = kendo.observable({
     zoneSource: new kendo.data.DataSource({
       transport: {
         read: {
-          url: "http://localhost:80/service/zone",
+          url: "http://192.168.1.153/service/zone",
           dataType: "JSON",
           type: "GET"
         },
         update:{
-          url: "http://localhost:80/service/zone",
+          url: "http://192.168.1.153/service/zone",
           dataType: "JSON",
           type: "PUT"          
         }
@@ -126,7 +126,7 @@ var zoneModel = kendo.observable({
       schema: { model: {} },
       transport: {
         create:{
-          url: "http://localhost:80/service/zone",
+          url: "http://192.168.1.153/service/zone",
           dataType: "JSON",
           type: "POST"          
         }
@@ -212,7 +212,7 @@ var eventModel = kendo.observable({
       }, ??????*/
       transport: {
         read: {
-          url: "http://localhost:80/service/event",
+          url: "http://192.168.1.133/service/event",
           dataType: "JSON",
           type: "GET"
         }        
